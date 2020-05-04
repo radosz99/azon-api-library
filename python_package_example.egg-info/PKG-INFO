@@ -1,0 +1,16 @@
+Metadata-Version: 1.0
+Name: python-package-example
+Version: 0.1
+Summary: An example python package
+Home-page: https://github.com/BillMills/python-package-example
+Author: Bill Mills
+Author-email: myemail@example.com
+License: MIT
+Description: **Work in progress**
+        
+        *biblioteka* - versioned library with few packages and few modules inside of each of them  
+        *aplikacja* - simple application using library from *biblioteka*  
+        *master* - basically nothing, except Readme.MD  
+        
+        
+Platform: UNKNOWN
