@@ -1,14 +1,14 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='python-package-example',
+    name='azon-library',
     version='0.1',
     packages=find_packages(exclude=['tests*']),
     license='MIT',
-    description='An example python package',
+    description='Python package used to facilitate the use of AZON resources',
     long_description=open('README.md').read(),
-    install_requires=['numpy'],
+    install_requires=['requests'],
     url='https://github.com/BillMills/python-package-example',
-    author='Bill Mills',
-    author_email='myemail@example.com'
+    author='Radoslaw Lis',
+    author_email='241385@student.pwr.edu.pl'
 )

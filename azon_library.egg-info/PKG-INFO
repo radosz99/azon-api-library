@@ -1,10 +1,10 @@
 Metadata-Version: 1.0
-Name: python-package-example
+Name: azon-library
 Version: 0.1
-Summary: An example python package
+Summary: Python package used to facilitate the use of AZON resources
 Home-page: https://github.com/BillMills/python-package-example
-Author: Bill Mills
-Author-email: myemail@example.com
+Author: Radoslaw Lis
+Author-email: 241385@student.pwr.edu.pl
 License: MIT
 Description: **Work in progress**
         
