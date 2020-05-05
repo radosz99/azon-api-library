@@ -2,7 +2,7 @@ Metadata-Version: 1.0
 Name: azon-library
 Version: 0.1
 Summary: Python package used to facilitate the use of AZON resources
-Home-page: https://github.com/BillMills/python-package-example
+Home-page: https://github.com/radosz99/azon-api-library
 Author: Radoslaw Lis
 Author-email: 241385@student.pwr.edu.pl
 License: MIT

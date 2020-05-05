@@ -8,7 +8,7 @@ setup(
     description='Python package used to facilitate the use of AZON resources',
     long_description=open('README.md').read(),
     install_requires=['requests'],
-    url='https://github.com/BillMills/python-package-example',
+    url='https://github.com/radosz99/azon-api-library',
     author='Radoslaw Lis',
     author_email='241385@student.pwr.edu.pl'
 )
