@@ -32,9 +32,23 @@ class Entry:
 
 
 
-def get_author_entries(author_pk):
+def get_author_entries(author_pk, api_key):
     try:
-        response = requests.get("https://api.e-science.pl/api/azon/authors/entries/"+str(author_pk)+"/", headers={'X-Api-Key': 'JhHl8LOiMRCg3EFWnRcEpxdXmz1VJDYOc0fEhtBY'})
+        response = requests.get("https://api.e-science.pl/api/azon/authors/entries/"+str(author_pk)+"/", headers={'X-Api-Key': api_key})
+        response.raise_for_status()
+        json_data  = response.json()
+        results = json_data['results']
+        entries_list=[]
+        for item in results:
+            entries_list.append(Entry(**item))
+        return entries_list
+
+    except HTTPError as http_err:
+        print(f'HTTP error occurred: {http_err}')
+
+def get_author_entries_by_page(author_pk, api_key, page):
+    try:
+        response = requests.get("https://api.e-science.pl/api/azon/authors/entries/"+str(author_pk)+"/?limit=100&offset=" + str(page) + "00", headers={'X-Api-Key': api_key})
         response.raise_for_status()
         json_data  = response.json()
         results = json_data['results']
@@ -46,9 +60,9 @@ def get_author_entries(author_pk):
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
     
-def get_all_entries():
+def get_entries_by_page(api_key, page):
     try:
-        response = requests.get("https://api.e-science.pl/api/azon/entry/filter/?limit=100&offset=5000", headers={'X-Api-Key': 'JhHl8LOiMRCg3EFWnRcEpxdXmz1VJDYOc0fEhtBY'})
+        response = requests.get("https://api.e-science.pl/api/azon/entry/filter/?limit=100&offset=" + str(page) + "00", headers={'X-Api-Key': api_key})
         response.raise_for_status()
         json_data  = response.json()
         results = json_data['results']
@@ -60,7 +74,7 @@ def get_all_entries():
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
 
-def get_entries_details(entries_list):
+def get_entries_details(entries_list, api_key):
     entries_details = []
     for entry in entries_list:
         time.sleep(1)
@@ -69,21 +83,25 @@ def get_entries_details(entries_list):
         if(entry_type=='e'):
             continue
         try:
-            response = requests.get("https://api.e-science.pl/api/azon/entry/"+str(pk)+"/", headers={'X-Api-Key': 'JhHl8LOiMRCg3EFWnRcEpxdXmz1VJDYOc0fEhtBY'})
+            response = requests.get("https://api.e-science.pl/api/azon/entry/"+str(pk)+"/", headers={'X-Api-Key': api_key})
             response.raise_for_status()
             json_data  = response.json()
             switcher = {
                 '1': get_book,#book 47674
                 '2': get_article,#article 24052
                 '4': get_phdthesis, #dyplomowa 14813
+                '6': get_photo,
                 '7': get_misc,#inny dokument misc 48245
                 '10': get_techreport, #chemiczny 6188
+                '14': get_video,
                 '15': get_misc,#inny dokument misc 48245
                 '17': get_misc,#inny dokument misc 48245
+                '18': get_magazine,#czasopismo 33638 ?limit=100&offset=26200
                 '24': get_misc#inny dokument misc 48245
             }
             
             item = switcher[entry_type](json_data)
+            print(item.get_bibtex())
             entries_details.append(item)
         except HTTPError as http_err:
             print(f'HTTP error occurred: {http_err}')
@@ -162,3 +180,50 @@ def get_techreport(json_data):
     info['partner']=json_data['partner']
     techreport=bibtex_classes.Techreport(**info)
     return techreport
+
+def get_magazine(json_data):
+    info={}
+    item=json_data['item']
+    info['authors']=json_data['authors']
+    info['creators']=json_data['co_creators']
+    info['title']=json_data['title']
+    info['year']=item['publish_time']
+    info['_type']=json_data['abstract']
+    info['pk']=json_data['pk']
+    info['note']=json_data['comments']
+    info['number']=item['numeration']
+    info['address']=item['publish_place']
+    info['pages']=item['number_of_pages']
+    magazine=bibtex_classes.Magazine(**info)
+    return magazine
+
+def get_photo(json_data):
+    info={}
+    item=json_data['item']
+    info['authors']=json_data['authors']
+    info['pk']=json_data['pk']
+    info['title']=json_data['title']
+    info['_type']=json_data['entry_type']
+    info['year']=item['creation_time']
+    info['note']=json_data['abstract']
+    info['series']=item['series_name']
+    info['address']=item['creation_place']
+    info['number']=item['numeration']
+    photo=bibtex_classes.Misc(**info)
+    return photo
+
+def get_video(json_data):
+    info={}
+    item=json_data['item']
+    info['authors']=json_data['authors']
+    info['creators']=json_data['co_creators']
+    info['pk']=json_data['pk']
+    info['title']=json_data['title']
+    info['_type']=json_data['entry_type']
+    info['year']=item['creation_time']
+    info['publisher']=item['publisher']
+    info['note']=json_data['abstract']  
+    info['address']=item['creation_place']
+    info['number']=item['numeration']
+    video=bibtex_classes.Misc(**info)
+    return video

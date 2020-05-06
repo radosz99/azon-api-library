@@ -1,14 +1,17 @@
 from . import api_handler
 
+api_key='JhHl8LOiMRCg3EFWnRcEpxdXmz1VJDYOc0fEhtBY'
 
-entries = api_handler.get_author_entries(3)
+entries = api_handler.get_author_entries_by_page(2871,api_key,10)
+#entries = api_handler.get_entries_by_page(api_key,100)
+#etails = api_handler.get_entries_details(entries,api_key)
 
-details = api_handler.get_entries_details(entries)
+for detail in entries:
+    print(detail)
+# for item in details:
+#     print(item.get_bibtex())
 
-for item in details:
-    print(item.get_bibtex())
 
-
-with open("bibtex.bib", "a") as myfile:
-    for item in details:
-        myfile.write(item.get_bibtex()+'\n')
+# with open("bibtex.bib", "a") as myfile:
+#     for item in details:
+#         myfile.write(item.get_bibtex()+'\n')

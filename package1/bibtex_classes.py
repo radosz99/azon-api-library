@@ -43,7 +43,7 @@ class Book:
             bib+=f'\n  key =\t"{self.key}",'
         if(self.isbn!='' and self.isbn!=None):
             bib+=f'\n  isbn =\t"{self.isbn}",'
-        bib=bib[0:len(bib)-1]+'\n}'
+        bib=bib[0:len(bib)-1]+'\n}\n'
         return bib
 
 
@@ -80,7 +80,7 @@ class Article:
             bib+=f'\n  note =\t"{self.note}",'
         if(self.issn!='' and self.issn!=None):
             bib+=f'\n  issn =\t"{self.issn}",'
-        bib=bib[0:len(bib)-1]+'\n}'
+        bib=bib[0:len(bib)-1]+'\n}\n'
         return bib    
 
 class InBook:
@@ -114,12 +114,13 @@ class InBook:
             bib+=f'\n  note =\t"{self.note}",'
         if(self.issn!='' and self.issn!=None):
             bib+=f'\n  issn =\t"{self.issn}",'
-        bib=bib[0:len(bib)-1]+'\n}'
+        bib=bib[0:len(bib)-1]+'\n}\n'
         return bib
 
 class Misc:
-    def __init__(self,pk,authors='', title='', note='', _type=''):
+    def __init__(self,pk,authors='', creators='',title='', note='', _type='', year='', series='', address='', number='', publisher=''):
         self.pk=pk
+
         self.authors=[]
         for i in range (len(authors)):
             author = authors[i]['author']
@@ -129,22 +130,52 @@ class Misc:
             self.authors_string+=self.authors[i]
             if(i!=len(self.authors)-1):
                 self.authors_string+=', '
+
+        self.creators=[]
+        for i in range(len(creators)):
+            creator = creators[i]['co_creator']
+            self.creators.append(creator['full_name'])
+        self.creators_string=''
+        for i in range (len(self.creators)):
+            self.creators_string+=self.creators[i]
+            if(i!=len(self.creators)-1):
+                self.creators_string+=', ' 
+        if(len(self.authors)==0):
+            self.authors_string=self.creators_string
         self.title=title
         self.note=note
         self.type=_type
+        self.year=year
+        self.series=series
+        self.address=address
+        self.number=number
+        self.publisher=publisher
 
     def get_bibtex(self):
         bib=f'@misc{{{self.pk},'
-        if(self.authors!='' and self.authors!=None):
-            bib+=f'\n  authors =\t"{self.authors}",'
+        if(self.authors_string!='' and self.authors_string!=None):
+            bib+=f'\n  authors =\t"{self.authors_string}",'
         if(self.title!='' and self.title!=None):
             bib+=f'\n  title =\t"{self.title}",'
         if(self.type!='' and self.type!=None):
             bib+=f'\n  type =\t"{self.type}",'
         if(self.note!='' and self.note!=None):
             bib+=f'\n  note =\t"{self.note}",'
-        bib=bib[0:len(bib)-1]+'\n}'
+        if(self.year!='' and self.year!=None):
+            bib+=f'\n  year =\t{self.year},'
+        if(self.series!='' and self.series!=None):
+            bib+=f'\n  series =\t"{self.series}",'
+        if(self.address!='' and self.address!=None):
+            bib+=f'\n  address =\t"{self.address}",'
+        if(self.number!='' and self.number!=None):
+            bib+=f'\n  number =\t"{self.number}",'
+        if(self.publisher!='' and self.publisher!=None):
+            bib+=f'\n  publisher =\t"{self.publisher}",'
+        bib=bib[0:len(bib)-1]+'\n}\n'
         return bib
+
+    def __repr__(self):
+        return f'Autor - {self.authors_string}\nTytuł - {self.title}\n'
 
 class Techreport:
     def __init__(self,pk,authors, title, partner, year, address='',note=''):
@@ -170,8 +201,11 @@ class Techreport:
             bib+=f'\n  address =\t"{self.address}",'
         if(self.note!='' and self.note!=None):
             bib+=f'\n  note =\t"{self.note}",'
-        bib=bib[0:len(bib)-1]+'\n}'
+        bib=bib[0:len(bib)-1]+'\n}\n'
         return bib 
+
+    def __repr__(self):
+        return f'Autor - {self.authors_string}\nTytuł - {self.title}\n'
 
 class Phdthesis :
     def __init__(self,pk,authors, title, school, year, address='',note=''):
@@ -197,5 +231,62 @@ class Phdthesis :
             bib+=f'\n  address =\t"{self.address}",'
         if(self.note!='' and self.note!=None):
             bib+=f'\n  note =\t"{self.note}",'
-        bib=bib[0:len(bib)-1]+'\n}'
+        bib=bib[0:len(bib)-1]+'\n}\n'
         return bib 
+
+    def __repr__(self):
+        return f'Autor - {self.authors_string}\nTytuł - {self.title}\n'
+
+class Magazine :
+    def __init__(self,pk,title,authors='', creators='', year='', _type='', number='', pages='', address='',note=''):
+        self.pk=pk
+        self.authors=[]
+        for i in range (len(authors)):
+            author = authors[i]['author']
+            self.authors.append(author)
+        self.authors_string=''
+        for i in range (len(self.authors)):
+            self.authors_string+=self.authors[i]
+            if(i!=len(self.authors)-1):
+                self.authors_string+=', '
+        self.creators=[]
+
+        for i in range(len(creators)):
+            creator = creators[i]['co_creator']
+            self.creators.append(creator['full_name'])
+        self.creators_string=''
+        for i in range (len(self.creators)):
+            self.creators_string+=self.creators[i]
+            if(i!=len(self.creators)-1):
+                self.creators_string+=', '
+        self.title=title
+        self.year=year
+        self.type=_type
+        self.address=address
+        self.number=number
+        self.pages=pages
+        self.note=note
+
+    def get_bibtex(self):
+        bib=f'@misc{{{self.pk},'
+        if(self.creators_string!='' and self.creators_string!=None):
+            bib+=f'\n  authors =\t"{self.creators_string}",'
+        if(self.title!='' and self.title!=None):
+            bib+=f'\n  title =\t"{self.title}",'
+        if(self.year!='' and self.year!=None):
+            bib+=f'\n  year =\t{self.year},'
+        if(self.type!='' and self.type!=None):
+            bib+=f'\n  type =\t"{self.type}",'
+        if(self.address!='' and self.address!=None):
+            bib+=f'\n  address =\t"{self.address}",'
+        if(self.note!='' and self.note!=None):
+            bib+=f'\n  note =\t"{self.note}",'
+        if(self.number!='' and self.number!=None):
+            bib+=f'\n  number =\t"{self.number}",'
+        if(self.pages!='' and self.pages!=None):
+            bib+=f'\n  pages =\t{self.pages},'
+        bib=bib[0:len(bib)-1]+'\n}\n'
+        return bib 
+
+    def __repr__(self):
+        return f'Autor - {self.authors_string}\nTytuł - {self.title}\n'
