@@ -7,6 +7,7 @@ azon_library.egg-info/requires.txt
 azon_library.egg-info/top_level.txt
 package1/__init__.py
 package1/api_handler.py
+package1/api_others.py
 package1/bibtex_classes.py
 package1/test.py
 package2/__init__.py
