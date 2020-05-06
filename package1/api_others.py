@@ -49,3 +49,34 @@ def get_pwr_reseach_centres(api_key):
 
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
+
+class Laboratory:
+    def __init__(self,_id, web_address, acronym, full_name, partner):
+        self.id=_id
+        self.web_address=web_address
+        self.acronym=acronym
+        self.full_name=full_name
+        self.partner=partner
+
+    def __repr__(self):
+        return f'Id - {self.id}\nStrona - {self.web_address}\nAkronim - {self.acronym}\nPełna nazwa - {self.full_name}\nPartner - {self.partner}\n'
+
+def get_laboratories(api_key):
+    try:
+        response = requests.get("https://api.e-science.pl/api/azon/databases/elaboratory/", headers={'X-Api-Key': api_key})
+        response.raise_for_status()
+        json_data  = response.json()
+        results = json_data['results']
+        lab_list=[]
+        for item in results:
+            info={}
+            info['_id']=item['id']
+            info['web_address']=item['web_address']
+            info['full_name']=item['full_name']
+            info['acronym']=item['acronym']
+            info['partner']=item['partner']
+            lab_list.append(Laboratory(**info))
+        return lab_list
+
+    except HTTPError as http_err:
+        print(f'HTTP error occurred: {http_err}')
