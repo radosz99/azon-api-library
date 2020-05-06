@@ -99,9 +99,7 @@ def get_entries_details(entries_list, api_key):
                 '18': get_magazine,#czasopismo 33638 ?limit=100&offset=26200
                 '24': get_misc#inny dokument misc 48245
             }
-            
             item = switcher[entry_type](json_data)
-            print(item.get_bibtex())
             entries_details.append(item)
         except HTTPError as http_err:
             print(f'HTTP error occurred: {http_err}')
