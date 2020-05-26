@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: azon-library
+Version: 1.0
+Summary: Python package used to facilitate the use of AZON resources
+Home-page: https://github.com/radosz99/azon-api-library
+Author: Radoslaw Lis
+Author-email: 241385@student.pwr.edu.pl
+License: MIT
+Description: **Work in progress**
+        
+Platform: UNKNOWN
